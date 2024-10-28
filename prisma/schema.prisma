@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Form {
+  id              Int @id @default(autoincrement())
+  published       Boolean @default(false)
+  title           String
+  description     String
+  userId          String
+  Question        Question[]
+  FormSubmission  FormSubmission[]
+}
+
+model Question {
+  id            Int @id @default(autoincrement())
+  text          String
+  formId        Int
+  form          Form @relation(fields: [formId], references: [id])
+  FieldType     FieldType
+  Answer        Answer[]
+  FieldOption   FieldOption[]
+}
+
+model Answer {
+  id               Int @id @default(autoincrement())
+  text             String
+  questionId       Int
+  question         Question @relation(fields: [questionId], references: [id])
+  formSubmissionId Int
+  formSubmission   FormSubmission @relation(fields: [formSubmissionId], references: [id])
+  fieldOptionId    Int?
+  FieldOption      FieldOption? @relation(fields: [fieldOptionId], references: [id])
+}
+
+model FieldOption {
+  id          Int @id @default(autoincrement())
+  text        String
+  value       String
+  questionId  Int
+  question    Question @relation(fields: [questionId], references: [id])
+  Answer      Answer[]
+}
+
+model FormSubmission {
+  id         Int @id @default(autoincrement())
+  formId     Int
+  form       Form @relation(fields: [formId], references: [id])
+  Answer     Answer[]
+}
+
+enum FieldType {
+  Input
+  TextArea
+  Radio
+  Checkbox
+  Select
+}
