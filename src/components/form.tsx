@@ -50,6 +50,7 @@ const Form: React.FC<Props> = ({ data, isPublished }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [publishedLink, setPublishedLink] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const confettiFunction = () => {
     const end = Date.now() + 3 * 1000; // 3 seconds
@@ -139,10 +140,13 @@ const Form: React.FC<Props> = ({ data, isPublished }) => {
       const submissionPromises = submitAnswer.map(answer => postAnswer(answer));
 
         try {
+        setIsLoading(true);
         await Promise.all(submissionPromises);
         router.push('/success');
       } catch (error) {
         console.error('Error submitting answers:', error);
+      } finally {
+        setIsLoading(false);
       }
       return;
     }
@@ -201,7 +205,7 @@ const Form: React.FC<Props> = ({ data, isPublished }) => {
               register={register}
             />
             <div className="mt-6">
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button disabled={isLoading} type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
                 {isPublished ? "Submit Response" : "Publish Form"}
               </Button>
             </div>
