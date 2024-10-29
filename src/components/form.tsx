@@ -151,7 +151,7 @@ const Form: React.FC<Props> = ({ data, isPublished }) => {
       const publishedForm = await publishForm(Number(data.form?.id));
       console.log('Form published:', publishedForm);
       if (!publishedForm) return;
-      setPublishedLink(`http://localhost:3000/survey/${publishedForm.id}`);
+      setPublishedLink(`https://formgenius-seven.vercel.app/survey/${publishedForm.id}`);
       setIsDialogOpen(true);
       confettiFunction();
     } catch (error) {
